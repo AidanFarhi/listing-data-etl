@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  cost-of-living-data-loader:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "9000:8080"
