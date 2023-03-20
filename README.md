@@ -27,5 +27,3 @@ Build and run the docker container
 Post an event to trigger the script
 
 `curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"extractDate": "2023-03-17"}'`
-
-

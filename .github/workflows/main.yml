@@ -3,7 +3,7 @@ name: Build image, push to ECR, and update Lambda function
 on:
   push:
     branches:
-      - "change me"
+      - "main"
 
 jobs:
   build:
