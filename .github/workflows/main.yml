@@ -36,13 +36,13 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      # -
-      #   name: Update AWS Lambda image
-      #   env:
-      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      #     ECR_REPOSITORY: real-estate-db
-      #     IMAGE_TAG: real-estate-data-loader
-      #   run: |
-      #     aws lambda update-function-code \
-      #       --function-name load-real-estate-data-to-snowflake \
-      #       --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      -
+        name: Update AWS Lambda image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: real-estate-db
+          IMAGE_TAG: real-estate-data-loader
+        run: |
+          aws lambda update-function-code \
+            --function-name load-listing-data-to-snowflake \
+            --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

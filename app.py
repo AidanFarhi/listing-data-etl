@@ -60,10 +60,24 @@ def main(event, context):
 
 	# Extract from S3
 	listing_df = get_df_from_s3(client, bucket_name, extract_date)
-	
+
+	# Get DE location data from Snowflake
+	location_df = pd.read_sql("SELECT location_id, zip_code FROM dim_location WHERE state = 'DE'", conn)
+
 	# Transform
 	listing_df = transform_listing_df(listing_df)
 
+	# Add location_id to crime_rate data
+	listing_merged_df = listing_df.merge(location_df, on='ZIP_CODE', how='inner')
+
+	# Filter
+	listing_keep_cols = [
+		'LOCATION_ID', 'PRICE', 'BEDROOMS', 'BATHROOMS', 'SQUARE_FOOTAGE',
+		'LISTED_DATE', 'REMOVED_DATE', 'YEAR_BUILT', 'LOT_SIZE', 'SNAPSHOT_DATE'
+	]
+	listing_merged_df = listing_merged_df[listing_keep_cols]
+	
 	# Load to Snowflake
-	write_pandas(conn, listing_df, 'LISTING')
+	write_pandas(conn, listing_merged_df, 'FACT_LISTING')
+	
 	return {'statusCode': 200}
