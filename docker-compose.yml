@@ -1,6 +1,8 @@
 version: "3.9"
 services:
-  cost-of-living-data-loader:
+  listing-data-ingestor:
+    environment:
+      - LAMBDA_HANDLER=app.main
     build:
       context: .
       dockerfile: Dockerfile.dev
