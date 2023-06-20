@@ -26,15 +26,18 @@ def get_df_from_s3(client: boto3.client, bucket_name: str, extract_date: str) ->
     objects_metadata = client.list_objects(Bucket=bucket_name, Prefix=f"real_estate/listings/{extract_date}")
     keys = [obj["Key"] for obj in objects_metadata["Contents"]]
     objects = [client.get_object(Bucket=bucket_name, Key=key) for key in keys]
-    df = pd.concat(
-        [
-            pd.read_json(
-                StringIO(obj["Body"].read().decode("utf-8")),
-                dtype={"zipCode": "object"},
+    dfs = []
+    for obj in objects:
+        try:
+            dfs.append(
+                pd.read_json(
+                    StringIO(obj["Body"].read().decode("utf-8")),
+                    dtype={"zipCode": "object"},
+                )
             )
-            for obj in objects
-        ]
-    )
+        except Exception as e:
+            print(e)
+    df = pd.concat(dfs)
     return df
 
 
